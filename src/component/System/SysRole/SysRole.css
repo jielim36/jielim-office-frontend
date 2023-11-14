@@ -1,0 +1,140 @@
+/* SysRole.css */
+
+.SysRoleContainer {
+    position: absolute;
+    width: 100%;
+    padding: 10px 40px;
+}
+
+.SysRoleTittle{
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+
+.searchBar {
+    display: flex;
+    align-items: center;
+}
+
+.searchBar p {
+margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.searchBar input {
+padding: 8px; /* Adjust the padding as needed */
+margin-right: 10px; /* Adjust the margin as needed */
+border: 1px solid #ccc; /* Add a border as needed */
+border-radius: 4px; /* Add border-radius for rounded corners */
+}
+
+.searchBar button {
+padding: 8px 12px; /* Adjust the padding as needed */
+background-color: var(--button-bg-color); /* Set background color as needed */
+color: #fff; /* Set text color as needed */
+border: none;
+border-radius: 4px; /* Add border-radius for rounded corners */
+cursor: pointer;
+}
+
+.searchBar button:hover {
+background-color: var(--button-hover-color); /* Change the background color on hover as needed */
+}
+
+  
+.SysRoleTable {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+}
+
+.SysRoleTable th, .SysRoleTable td {
+border: 1px solid #ddd;
+padding: 8px;
+text-align: left;
+}
+
+.SysRoleTable th {
+background-color: #f2f2f2;
+}
+
+.SysRoleTable tbody tr:nth-child(even) {
+background-color: #f9f9f9;
+}
+
+.SysRoleTable tbody tr:hover {
+background-color: #e0e0e0;
+}
+
+/* Pagination */
+.Pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px; /* 调整需要的外边距 */
+}
+
+.Pagination .core{
+    margin: 0px 50px;
+}
+
+.Pagination span{
+    padding: 0 5px;
+}
+
+.Pagination p {
+    margin-right: 10px; /* 调整需要的外边距 */
+}
+
+.Pagination button {
+    padding: 8px 12px; /* 调整需要的填充 */
+    margin: 0 5px; /* 调整需要的外边距 */
+    background-color: var(--button-bg-color); /* 设置需要的背景颜色 */
+    color: var(--text-second-color);
+    border: none;
+    border-radius: 4px; /* 为了圆角，添加边框半径 */
+    cursor: pointer;
+}
+
+.Pagination button:hover:not(.arrowButton) {
+    background-color: var(--button-hover-color); /* 鼠标悬停时的背景颜色 */
+}
+
+.Pagination input {
+    width: 50px; /* 调整需要的宽度 */
+    padding: 8px; /* 调整需要的填充 */
+    margin: 0 5px; /* 调整需要的外边距 */
+    border: 1px solid #ccc; /* 添加需要的边框 */
+    border-radius: 4px; /* 为了圆角，添加边框半径 */
+}
+
+/* 左右箭头样式 */
+.Pagination .arrowButton {
+    font-size: 20px; /* 调整箭头的大小 */
+    font-weight: bold;
+    padding: 8px 12px; /* 调整需要的填充 */
+    margin: 0 5px; /* 调整需要的外边距 */
+    background-color: transparent; /* 设置需要的背景颜色 */
+    color: var(--button-bg-color); /* 设置需要的文本颜色 */
+    border: none;
+    border-radius: 4px; /* 为了圆角，添加边框半径 */
+    cursor: pointer;
+}
+
+.Pagination .arrowButton:hover {
+    color: var(--button-hover-color); /* 鼠标悬停时的背景颜色 */
+}
+
+.operationBtn {
+    padding: 8px 12px; /* 调整需要的填充 */
+    margin: 0 5px; /* 调整需要的外边距 */
+    background-color: var(--button-bg-color); /* 设置需要的背景颜色 */
+    color: var(--text-second-color);
+    border: none;
+    border-radius: 4px; /* 为了圆角，添加边框半径 */
+    cursor: pointer;
+}
+
+.operationBtn:hover{
+    background-color: var(--button-hover-color); /* 鼠标悬停时的背景颜色 */
+}

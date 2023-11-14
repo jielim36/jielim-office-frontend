@@ -1,0 +1,12 @@
+.NavSideBarContainer {
+    width: 200px;
+    position: fixed;
+    height: 100%;
+}
+
+.ContentContainer{
+    margin-left: 200px;
+    background-color: white;
+    position: relative;
+    background-color: var(--primary-bg-color);
+}

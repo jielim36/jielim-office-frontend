@@ -1,0 +1,11 @@
+.alertContainer {
+    width: 300px;
+    height: 200px;
+    background-color: red;
+    z-index: 10;
+    position: fixed;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(100% 100%);
+}
