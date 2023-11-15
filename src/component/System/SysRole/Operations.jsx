@@ -1,45 +1,174 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Alert from '../../Tools/Alert/Alert';
-import AxiosUtil from '../../../Axios/AxiosUtil';
 import { useState } from 'react';
+import CustomModal from '../../Tools/Modal/CustomModal';
+import './Operations.css';
+import AxiosUtil from '../../../Axios/AxiosUtil';
 
-const Operations = ({roleObject}) => {
+const Operations = ({roleObject, onUpdateInfo}) => {
 
+    const baseAPI = `/admin/system/sysRole`;
     const [showAlert, setShowAlert] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [alertContent , setAlertContent] = useState('default content');
+    const [editRoleForm , setEditRoleForm] = useState(false);
 
+    const [formData, setFormData] = useState(roleObject);
+  
+    const handleOpenEditRoleModal = () =>{
+      setEditRoleForm(true);
+    }
+  
+    const handleCancleEditRoleModal = () =>{
+      setEditRoleForm(false);
+      setFormData({
+        roleName: '',
+        roleCode: '',
+        description: '',
+      });
+    }
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    };
+  
+    const handleAddRoleSubmit = (e) => {
+      e.preventDefault();
+      editSysRoleRequest();
+      setFormData({
+        roleName: '',
+        roleCode: '',
+        description: '',
+      });
+      handleCancleEditRoleModal();
+    };
 
     const handleDelete = () => {
-      const confirmDelete = window.confirm('Are you sure you want to delete this role?');
-  
-      if (confirmDelete) {
-        const content = 'Role ID: ' + roleObject.id + ' has been deleted!'
-        AxiosUtil('delete', `/admin/system/sysRole/${roleObject.id}` ).then(
+        setIsModalOpen(true);
+      };
+    
+      const handleConfirmDelete = () => {
+        // 在这里执行删除逻辑
+        setIsModalOpen(false);
+        AxiosUtil('delete', `${baseAPI}/${roleObject.id}` ).then(
             (res) => {
               if (res.message === 'Success') {
-                return <Alert content={content}/>
+                setAlertContent(`${roleObject.roleName} Role is Deleted!`)
               } else {
-                return <Alert content={"Invalid Operation!"} />
+                setAlertContent(`Invalid delete operation...`)
               }
             },
             (error) => {
-              console.log('异常啦', error);
+                console.log('异常啦', error);
             }
+            );
+        updateInformationTimer();
+      };
+
+      
+      const editSysRoleRequest = ()=>{
+        AxiosUtil('put',`${baseAPI}`,formData).then(
+          (res) => {
+            if (res.message === 'Success') {
+              setAlertContent("Edit Successful...");
+              updateInformationTimer();
+              popupAlert();
+            } else {
+              console.error('Invalid response format:', res);
+            }
+          },
+          (error) => {
+            console.log('Error:', error);
+          }
         );
-        window.location.reload();
       }
-    };
+    
+      const handleCancelDelete = () => {
+        setIsModalOpen(false);
+      };
+
+    const updateInformationTimer = ()=>{
+      const timeout = setTimeout(() => {
+          onUpdateInfo();
+      }, 100);
   
-    const handleEdit = () => {
-      // Navigate to the edit page (You need to define the route and component)
-      console.log("Edit...");
-      return <Alert content={"hihii"} />
-    };
+      // 清理定时器以防止内存泄漏
+      return () => clearTimeout(timeout);
+    }
+
+    const popupAlert = ()=>{
+      setShowAlert(true);
+      const timeout = setTimeout(() => {
+          setShowAlert(false);
+          onUpdateInfo();
+      }, 3000);
+  
+      // 清理定时器以防止内存泄漏
+      return () => clearTimeout(timeout);
+    }
+
+    useEffect(()=>{
+      console.log("Show alert:" + showAlert);
+    },[showAlert])
   
     return (
-      <div>
-        <button className='operationBtn' onClick={handleEdit}>Edit</button>
-        <button className='operationBtn' onClick={handleDelete}>Delete</button>
-      </div>
+        <>
+            <div>
+                <button className='operationBtn' onClick={handleOpenEditRoleModal}>Edit</button>
+                <button className='operationBtn' onClick={handleDelete}>Delete</button>
+            </div>
+            <CustomModal
+                isOpen={isModalOpen}
+                onRequestClose={handleCancelDelete}
+            >
+                <p>Are you sure you want to delete this role?</p>
+                <button className='deleteBtn' onClick={handleConfirmDelete}>Yes</button>
+                <button className='cancelDeleteBtn' onClick={handleCancelDelete}>No</button>
+            </CustomModal>
+            <CustomModal
+              isOpen={editRoleForm}
+              onRequestClose={handleCancleEditRoleModal}
+              contentLabel="Custom Modal"
+            >
+              <h2>Create Role</h2>
+              <form onSubmit={handleAddRoleSubmit}>
+                <div className='addRoleFormConatainer'>  
+                  <label>
+                    Role Name:
+                    <input
+                      type="text"
+                      name="roleName"
+                      value={formData.roleName}
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <label>
+                    Role Code:
+                    <input
+                      type="text"
+                      name="roleCode"
+                      value={formData.roleCode}
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <label>
+                    Description:
+                    <input
+                      name="description"
+                      value={formData.description}
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <button type="submit">Submit</button>
+                </div>
+              </form>
+          </CustomModal> 
+            <Alert content={alertContent} show={showAlert}/>
+        </>
     );
 }
 

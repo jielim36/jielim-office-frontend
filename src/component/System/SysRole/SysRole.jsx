@@ -2,8 +2,47 @@ import './SysRole.css';
 import React, { useEffect, useState,useCallback } from 'react'
 import AxiosUtil from '../../../Axios/AxiosUtil';
 import Operations from './Operations';
+import CustomModal from '../../Tools/Modal/CustomModal';
+import Alert from '../../Tools/Alert/Alert';
 
 const SysRole = () => {
+
+  const [addRoleForm , setAddRoleForm] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertContent , setAlertContent] = useState('');
+
+  const [formData, setFormData] = useState({
+    roleName: "",
+    roleCode: "",
+    description: ""
+  });
+
+  const handleOpenAddRoleModal = () =>{
+    setAddRoleForm(true);
+  }
+
+  const handleCancleAddRoleModal = () =>{
+    setAddRoleForm(false);
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleAddRoleSubmit = (e) => {
+    e.preventDefault();
+    addSysRoleRequest();
+    setFormData({
+      roleName: '',
+      roleCode: '',
+      description: '',
+    });
+    handleCancleAddRoleModal();
+  };
 
   const baseAPI = `/admin/system/sysRole`;
   const [sysRoleData, setSysRoleData] = useState({
@@ -16,6 +55,23 @@ const SysRole = () => {
       roleName: ''
     }
   });
+
+  const addSysRoleRequest = ()=>{
+    AxiosUtil('post',`${baseAPI}`,formData).then(
+      (res) => {
+        if (res.message === 'Success') {
+          setAlertContent("Added new system role...");
+          updateInformation();
+          popupAlert();
+        } else {
+          console.error('Invalid response format:', res);
+        }
+      },
+      (error) => {
+        console.log('Error:', error);
+      }
+    );
+  }
 
   const getSysRolePage = useCallback(() => {
     AxiosUtil('get', `${baseAPI}/${sysRoleData.page}/${sysRoleData.limit}`, sysRoleData.searchObject).then(
@@ -36,14 +92,34 @@ const SysRole = () => {
         }
       },
       (error) => {
-        console.log('异常啦', error);
+        console.log('Error:', error);
       }
     );
   }, [baseAPI,sysRoleData]);
   
   useEffect(()=>{
     getSysRolePage();
-  },[sysRoleData.page])
+  },[sysRoleData.page,sysRoleData.totalData])
+
+  const popupAlert = ()=>{
+    setShowAlert(true);
+    const timeout = setTimeout(() => {
+        setShowAlert(false);
+        getSysRolePage();
+    }, 3000);
+
+    // 清理定时器以防止内存泄漏
+    return () => clearTimeout(timeout);
+  }
+
+  const updateInformation = ()=>{
+    const timeout = setTimeout(() => {
+        getSysRolePage();
+    }, 100);
+
+    // 清理定时器以防止内存泄漏
+    return () => clearTimeout(timeout);
+  }
 
   const handleSearchChange = (e) => {
     setSysRoleData((prevData) => ({
@@ -67,6 +143,9 @@ const SysRole = () => {
     }));
   };
   
+  const del_function = () =>{
+    getSysRolePage();
+  }
 
 
   return (
@@ -85,6 +164,13 @@ const SysRole = () => {
         />
         <button onClick={handleSearch}>Search</button>
       </div>
+
+      <button 
+        className='addRoleBtn'
+        onClick={handleOpenAddRoleModal}
+        >
+          Add
+      </button>
 
       <table className='SysRoleTable'>
         <thead>
@@ -107,7 +193,7 @@ const SysRole = () => {
               <td>{role.description}</td>
               <td>{role.createTime}</td>
               <td>{role.updateTime}</td>
-              <td><Operations roleObject={role}/></td>
+              <td><Operations roleObject={role} onUpdateInfo={() => del_function()}/></td>
             </tr>
           ))}
         </tbody>
@@ -142,7 +228,46 @@ const SysRole = () => {
           max={sysRoleData.totalPage}
         />
         <button onClick={getSysRolePage}>Go</button>
-      </div>     
+      </div>
+      <CustomModal
+        isOpen={addRoleForm}
+        onRequestClose={handleCancleAddRoleModal}
+        contentLabel="Custom Modal"
+      >
+        <h2>Create Role</h2>
+        <form onSubmit={handleAddRoleSubmit}>
+          <div className='addRoleFormConatainer'>  
+            <label>
+              Role Name:
+              <input
+                type="text"
+                name="roleName"
+                value={formData.roleName}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Role Code:
+              <input
+                type="text"
+                name="roleCode"
+                value={formData.roleCode}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Description:
+              <input
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </label>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+    </CustomModal> 
+    <Alert content={alertContent} show={showAlert}/>
     </div>
   )
 }

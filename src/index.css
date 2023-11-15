@@ -59,14 +59,6 @@ body {
   position: relative;
 }
 
-.button {
-  padding: var(--padding);
-  margin: var(--margin);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  transition: background-color var(--transition-duration);
-}
-
 a {
   text-decoration: none;
 }
@@ -75,5 +67,18 @@ ul, ol {
   list-style: none;
 }
 
+button {
+  padding: 8px 12px; /* 调整需要的填充 */
+  margin: 0 5px; /* 调整需要的外边距 */
+  background-color: var(--button-bg-color); /* 设置需要的背景颜色 */
+  color: var(--text-second-color);
+  border: none;
+  border-radius: 4px; /* 为了圆角，添加边框半径 */
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: var(--button-hover-color);
+}
 
 

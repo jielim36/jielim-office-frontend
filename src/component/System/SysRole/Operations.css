@@ -1,0 +1,11 @@
+.cancelDeleteBtn , .deleteBtn{
+    margin-top: 20px;
+}
+
+.deleteBtn{
+    background-color: #f5222d; /* 设置需要的背景颜色 */
+}
+
+.deleteBtn:hover{
+    background-color: #ff4d4f;
+}

@@ -3,9 +3,6 @@
  */
 import axios from "axios";
 
-axios.defaults.timeout = 10000;
-axios.defaults.baseURL = 'http://localhost:8800';
-
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:8800',
     timeout: 10000,
@@ -13,6 +10,23 @@ const axiosInstance = axios.create({
         
     },
 });
+
+// axiosInstance.interceptors.request.use(
+//   (config) => {
+//     // 输出请求信息
+//     console.log('Starting Request', config);
+    
+//     //config.data = JSON.stringify(config.data);
+//     config.headers = {
+//       "Content-Type": "application/json",
+//     };
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
 
 /**
  * http request 拦截器
@@ -142,8 +156,8 @@ export function del(url) {
   }
 
 //统一接口处理，返回数据
-export default function (fecth, url, param) {
-  let _data = "";
+const AxiosUtil = (fecth, url, param) => {
+  //let _data = "";
   return new Promise((resolve, reject) => {
     switch (fecth) {
       case "get":
@@ -192,6 +206,8 @@ export default function (fecth, url, param) {
     }
   });
 }
+
+export default AxiosUtil;
 
 //失败提示
 function msag(err) {

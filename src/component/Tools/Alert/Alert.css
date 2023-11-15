@@ -1,11 +1,21 @@
 .alertContainer {
-    width: 300px;
-    height: 200px;
-    background-color: red;
-    z-index: 10;
-    position: fixed;
-    
-    top: 50%;
-    left: 50%;
-    transform: translate(100% 100%);
+  position: fixed;
+  bottom: 0;
+  max-width: 500px;
+  right: 0;
+  transform: translateX(-50px) translateY(100%); /* 初始位置在底部之外 */
+  z-index: 1000;
+  transition: transform 0.5s ease-in-out; /* 过渡动画效果，0.5秒 */
+}
+
+.alertContainer.show {
+  transform: translateX(-50px) translateY(0); /* 显示时移动到底部 */
+}
+
+.alert {
+  background-color: white;
+  box-shadow: var(--shadow);
+  padding: 16px;
+  border-radius: 8px;
+  margin: 10px;
 }
