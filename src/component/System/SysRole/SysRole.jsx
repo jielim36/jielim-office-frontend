@@ -10,6 +10,8 @@ const SysRole = () => {
   const [addRoleForm , setAddRoleForm] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent , setAlertContent] = useState('');
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [deleteBatch,setDeleteBatch] = useState(false);
 
   const [formData, setFormData] = useState({
     roleName: "",
@@ -147,6 +149,49 @@ const SysRole = () => {
     getSysRolePage();
   }
 
+  const handleBatchDeleteCheckbox = ()=>{
+    setDeleteBatch(!deleteBatch);
+    if(deleteBatch){
+      const allIds = sysRoleData.dataList.map((role) => role.id);
+      setSelectedRows(allIds);
+    }else{
+      setSelectedRows([]);
+    }
+  }
+
+  const handleRowSelect = (roleId) => {
+    setSelectedRows((prevSelectedRows) => {
+      return prevSelectedRows.includes(roleId)
+        ? prevSelectedRows.filter((id) => id !== roleId)
+        : [...prevSelectedRows, roleId];
+    });
+  };
+
+  const handleBatchDelete = () => {
+    // Perform batch delete operation using selectedRows
+    if (selectedRows.length === 0) {
+      alert('Please select at least one row to delete.');
+      return;
+    }
+    
+    AxiosUtil('delete', `${baseAPI}`, selectedRows ).then(
+      (res) => {
+        if (res.message === 'Success') {
+          // Update the state or fetch data again if needed
+          updateInformation();
+          // Clear selected rows
+          setSelectedRows([]);
+          popupAlert();
+        } else {
+          setAlertContent(`Invalid delete operation...`)
+        }
+      },
+      (error) => {
+          console.log('异常啦', error);
+      }
+      );
+  };
+
 
   return (
     <div className='SysRoleContainer'>
@@ -166,6 +211,13 @@ const SysRole = () => {
       </div>
 
       <button 
+        className='batchDeleteRoleBtn'
+        onClick={handleBatchDelete}
+        >
+          Batch Delete
+      </button>
+
+      <button 
         className='addRoleBtn'
         onClick={handleOpenAddRoleModal}
         >
@@ -175,6 +227,13 @@ const SysRole = () => {
       <table className='SysRoleTable'>
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                onChange={()=> handleBatchDeleteCheckbox()}
+                checked={selectedRows.length === sysRoleData.dataList.length}
+              />
+            </th>
             <th>ID</th>
             <th>Role Name</th>
             <th>Role Code</th>
@@ -187,6 +246,13 @@ const SysRole = () => {
         <tbody>
           {sysRoleData.dataList.map((role) => (
             <tr key={role.id}>
+              <td>
+                <input
+                  type="checkbox"
+                  onChange={(event) => handleRowSelect(role.id)}
+                  checked={selectedRows.includes(role.id)}
+                />
+              </td>
               <td>{role.id}</td>
               <td>{role.roleName}</td>
               <td>{role.roleCode}</td>

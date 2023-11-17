@@ -141,19 +141,19 @@ export function put(url, data = {}) {
   });
 }
 
-export function del(url) {
-    return new Promise((resolve, reject) => {
-        axiosInstance.delete(url).then(
-        (response) => {
-          resolve(response.data);
-        },
-        (err) => {
-          msag(err);
-          reject(err);
-        }
-      );
-    });
-  }
+export function del(url, data) {
+  return new Promise((resolve, reject) => {
+    axiosInstance.delete(url, {data:data}).then(
+      (response) => {
+        resolve(response.data);
+      },
+      (err) => {
+        msag(err);
+        reject(err);
+      }
+    );
+  });
+}
 
 //统一接口处理，返回数据
 const AxiosUtil = (fecth, url, param) => {

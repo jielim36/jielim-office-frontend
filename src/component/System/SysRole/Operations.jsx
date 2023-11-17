@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Alert from '../../Tools/Alert/Alert';
 import { useState } from 'react';
 import CustomModal from '../../Tools/Modal/CustomModal';
@@ -21,11 +21,6 @@ const Operations = ({roleObject, onUpdateInfo}) => {
   
     const handleCancleEditRoleModal = () =>{
       setEditRoleForm(false);
-      setFormData({
-        roleName: '',
-        roleCode: '',
-        description: '',
-      });
     }
   
     const handleChange = (e) => {
@@ -39,11 +34,6 @@ const Operations = ({roleObject, onUpdateInfo}) => {
     const handleAddRoleSubmit = (e) => {
       e.preventDefault();
       editSysRoleRequest();
-      setFormData({
-        roleName: '',
-        roleCode: '',
-        description: '',
-      });
       handleCancleEditRoleModal();
     };
 
@@ -66,7 +56,7 @@ const Operations = ({roleObject, onUpdateInfo}) => {
                 console.log('异常啦', error);
             }
             );
-        updateInformationTimer();
+            popupAlertWithUpdate();
       };
 
       
@@ -104,22 +94,29 @@ const Operations = ({roleObject, onUpdateInfo}) => {
       setShowAlert(true);
       const timeout = setTimeout(() => {
           setShowAlert(false);
-          onUpdateInfo();
+          // onUpdateInfo();
       }, 3000);
   
       // 清理定时器以防止内存泄漏
       return () => clearTimeout(timeout);
     }
 
-    useEffect(()=>{
-      console.log("Show alert:" + showAlert);
-    },[showAlert])
+    const popupAlertWithUpdate = ()=>{
+      setShowAlert(true);
+      const timeout = setTimeout(() => {
+          setShowAlert(false);
+          onUpdateInfo();
+      }, 3000);
+  
+      // 清理定时器以防止内存泄漏
+      return () => clearTimeout(timeout);
+    }
   
     return (
         <>
             <div>
                 <button className='operationBtn' onClick={handleOpenEditRoleModal}>Edit</button>
-                <button className='operationBtn' onClick={handleDelete}>Delete</button>
+                <button className='operationBtn .deleteBtn' onClick={handleDelete}>Delete</button>
             </div>
             <CustomModal
                 isOpen={isModalOpen}

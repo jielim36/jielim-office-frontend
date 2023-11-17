@@ -133,4 +133,10 @@ background-color: #e0e0e0;
     margin-left: 7px;
 }
 
-  
+.SysRoleContainer .batchDeleteRoleBtn{
+    background-color: var(--button-red-color);
+}
+
+.SysRoleContainer .batchDeleteRoleBtn:hover{
+    background-color: var(--button-red-hover-color);
+}
