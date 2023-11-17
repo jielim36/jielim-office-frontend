@@ -12,6 +12,8 @@ const SysRole = () => {
   const [alertContent , setAlertContent] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [deleteBatch,setDeleteBatch] = useState(false);
+  const [isBatchDeleteModalOpen, setIsBatchDeleteModalOpen] = useState(false);
+
 
   const [formData, setFormData] = useState({
     roleName: "",
@@ -173,7 +175,7 @@ const SysRole = () => {
       alert('Please select at least one row to delete.');
       return;
     }
-    
+
     AxiosUtil('delete', `${baseAPI}`, selectedRows ).then(
       (res) => {
         if (res.message === 'Success') {
@@ -190,6 +192,19 @@ const SysRole = () => {
           console.log('异常啦', error);
       }
       );
+      setIsBatchDeleteModalOpen(false);
+  };
+
+  const handleCancelBatchDeleteModal = () => {
+    setIsBatchDeleteModalOpen(false);
+  };
+
+  const handleOpenBatchDeleteModal = () => {
+    if (selectedRows.length === 0) {
+      alert('Please select at least one row to delete.');
+      return;
+    }
+    setIsBatchDeleteModalOpen(true);
   };
 
 
@@ -212,7 +227,7 @@ const SysRole = () => {
 
       <button 
         className='batchDeleteRoleBtn'
-        onClick={handleBatchDelete}
+        onClick={handleOpenBatchDeleteModal}
         >
           Batch Delete
       </button>
@@ -333,6 +348,15 @@ const SysRole = () => {
           </div>
         </form>
     </CustomModal> 
+    <CustomModal
+        isOpen={isBatchDeleteModalOpen}
+        onRequestClose={handleCancelBatchDeleteModal}
+    >
+        <p>Are you sure you want to delete {selectedRows.length} roles?</p>
+        <button className='deleteBtn' onClick={handleBatchDelete}>Yes</button>
+        <button className='cancelDeleteBtn' onClick={handleCancelBatchDeleteModal}>No</button>
+    </CustomModal>
+
     <Alert content={alertContent} show={showAlert}/>
     </div>
   )
