@@ -9,7 +9,7 @@
   --text-color: #333;
   --text-second-color: #f0f0f0;
   --primary-bg-color: #f0f0f0;
-  --background-color: #51258f;
+  --background-color: #24163a;
   --background-second-color: #5C5470;
   --background-third-color: #352F44;
 
@@ -77,6 +77,7 @@ button {
   border: none;
   border-radius: 4px; /* 为了圆角，添加边框半径 */
   cursor: pointer;
+  font-family: var(--font-family);
 }
 
 button:hover{

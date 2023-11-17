@@ -1,5 +1,11 @@
 .NavSideBarContainer {
-    background-color: var(--background-third-color);
+    background-color: var(--background-color);
+    /* padding: 20px 30px; */
+    display: flex;
+    flex-direction: column;
+}
+
+.NavSideBarContainer h2{
     padding: 20px 30px;
 }
 
@@ -8,11 +14,82 @@
     border-bottom: 2px solid var(--background-second-color);
 }
 
-.NavSideBarContainer *{
+.NavSideBarContainer * {
     color: var(--text-second-color);
 }
 
-li{
-    /* text-align: center; */
-    padding: 10px 0px;
+.mainSelection{
+    max-height: 1000px;
+}
+
+.NavSideBarContainer .mainSelection>li{
+    margin-bottom: 5px;
+    border-bottom: 2px solid var(--background-second-color);
+}
+
+.mainSelection li:hover{
+    background-color: var(--background-third-color);
+}
+
+.homeSelection a{
+    width: 100%;
+    height: 100%;
+    line-height: 70px;
+    text-align: center;
+}
+
+.homeSelection *{
+    justify-content: center;
+    display: inline-block;
+}
+
+html .SystemManagementSubMenu{
+    /* background-color: var(--button-bg-color); */
+    padding: 0px;
+}
+
+.SystemManagementSubMenu li {
+    border-radius: 4px; /* 为了圆角，添加边框半径 */
+    padding: 0px;
+}
+
+.SystemManagementSubMenu > ul {
+    opacity: 0;
+    visibility: hidden;
+    list-style-type: none;
+    padding-left: 0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.2s ease-in-out, opacity 0.2s ease-out, visibility 0s 1s;
+}
+
+.SystemManagementSubMenu.Open{
+    background-color: var(--button-bg-color);
+}
+
+.SystemManagementSubMenu.Open > ul {
+    opacity: 1;
+    visibility: visible;
+    max-height: 200px;
+    transition: max-height 0.2s ease-out, opacity 0.2s ease-out, visibility 0s;
+}
+
+.SystemManagementSubMenu button{
+    width: 100%;
+    height: 70px;
+    margin: 0px;
+    font-size: var(--paragraph-font-size);
+    background-color: transparent;
+}
+
+.SystemManagementSubMenu.Open:hover{
+    background-color: var(--button-bg-color);
+}
+
+.SystemManagementSubMenu li{
+    padding: 20px 30px;
+}
+
+.SystemManagementSubMenu li:hover{
+    background-color: var(--button-hover-color);
 }
