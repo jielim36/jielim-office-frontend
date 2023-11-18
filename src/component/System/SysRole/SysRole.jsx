@@ -141,10 +141,12 @@ const SysRole = () => {
   };
 
   const handlePageChange = (newPage) => {
-    setSysRoleData((prevData) => ({
-      ...prevData,
-      page: newPage,
-    }));
+    if(newPage <= sysRoleData.totalPage){
+      setSysRoleData((prevData) => ({
+        ...prevData,
+        page: newPage,
+      }));
+    }
   };
   
   const del_function = () =>{
@@ -246,7 +248,7 @@ const SysRole = () => {
               <input
                 type="checkbox"
                 onChange={()=> handleBatchDeleteCheckbox()}
-                checked={selectedRows.length === sysRoleData.dataList.length}
+                checked={selectedRows.length === sysRoleData.dataList.length && sysRoleData.dataList.length != 0}
               />
             </th>
             <th>ID</th>

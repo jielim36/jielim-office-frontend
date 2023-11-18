@@ -7,26 +7,37 @@ import Alert from '../../Tools/Alert/Alert';
 
 const SysUser = () => {
 
-  const [addRoleForm , setAddRoleForm] = useState(false);
+  const [addUserForm , setAddUserForm] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent , setAlertContent] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [deleteBatch,setDeleteBatch] = useState(false);
   const [isBatchDeleteModalOpen, setIsBatchDeleteModalOpen] = useState(false);
-
-
-  const [formData, setFormData] = useState({
-    roleName: "",
-    roleCode: "",
-    description: ""
+  const baseAPI = `/admin/system/sysUser`;
+  const [sysUserData, setSysUserData] = useState({
+    dataList: [],
+    page: 1,
+    limit:5,
+    totalData:0,
+    totalPage:0,
+    searchObject:{
+      username: ''
+    }
   });
 
-  const handleOpenAddRoleModal = () =>{
-    setAddRoleForm(true);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    name: "",
+    phone: "",
+  });
+
+  const handleOpenAddUserModal = () =>{
+    setAddUserForm(true);
   }
 
-  const handleCancleAddRoleModal = () =>{
-    setAddRoleForm(false);
+  const handleCancleAddUserModal = () =>{
+    setAddUserForm(false);
   }
 
   const handleChange = (e) => {
@@ -37,34 +48,23 @@ const SysUser = () => {
     }));
   };
 
-  const handleAddRoleSubmit = (e) => {
+  const handleAddUserSubmit = (e) => {
     e.preventDefault();
-    addSysRoleRequest();
+    addSysUserRequest();
     setFormData({
-      roleName: '',
-      roleCode: '',
-      description: '',
+      username: "",
+      password: "",
+      name: "",
+      phone: "",
     });
-    handleCancleAddRoleModal();
+    handleCancleAddUserModal();
   };
 
-  const baseAPI = `/admin/system/sysRole`;
-  const [sysRoleData, setSysRoleData] = useState({
-    dataList: [],
-    page: 1,
-    limit:10,
-    totalData:0,
-    totalPage:0,
-    searchObject:{
-      roleName: ''
-    }
-  });
-
-  const addSysRoleRequest = ()=>{
+  const addSysUserRequest = ()=>{
     AxiosUtil('post',`${baseAPI}`,formData).then(
       (res) => {
         if (res.message === 'Success') {
-          setAlertContent("Added new system role...");
+          setAlertContent("Added new system user...");
           updateInformation();
           popupAlert();
         } else {
@@ -77,18 +77,18 @@ const SysUser = () => {
     );
   }
 
-  const getSysRolePage = useCallback(() => {
-    AxiosUtil('get', `${baseAPI}/${sysRoleData.page}/${sysRoleData.limit}`, sysRoleData.searchObject).then(
+  const getSysUserPage = useCallback(() => {
+    AxiosUtil('get', `${baseAPI}/${sysUserData.page}/${sysUserData.limit}`, sysUserData.searchObject).then(
       (res) => {
         if (res.data && res.data.records) {
-          setSysRoleData((prevState) => ({
+          setSysUserData((prevState) => ({
             ...prevState,  // Spread the previous state to retain its values
             dataList: res.data.records,  // Update the specific property you want to change
             page: res.data.current,
             totalData: res.data.total,
             totalPage: res.data.pages,
             searchObject: {
-              roleName: ''
+              username: ''
             },
           }));
         } else {
@@ -99,17 +99,17 @@ const SysUser = () => {
         console.log('Error:', error);
       }
     );
-  }, [baseAPI,sysRoleData]);
+  }, [baseAPI,sysUserData]);
   
   useEffect(()=>{
-    getSysRolePage();
-  },[sysRoleData.page,sysRoleData.totalData])
+    getSysUserPage();
+  },[sysUserData.page,sysUserData.totalData])
 
   const popupAlert = ()=>{
     setShowAlert(true);
     const timeout = setTimeout(() => {
         setShowAlert(false);
-        getSysRolePage();
+        getSysUserPage();
     }, 3000);
 
     // 清理定时器以防止内存泄漏
@@ -118,7 +118,7 @@ const SysUser = () => {
 
   const updateInformation = ()=>{
     const timeout = setTimeout(() => {
-        getSysRolePage();
+        getSysUserPage();
     }, 100);
 
     // 清理定时器以防止内存泄漏
@@ -126,46 +126,48 @@ const SysUser = () => {
   }
 
   const handleSearchChange = (e) => {
-    setSysRoleData((prevData) => ({
+    setSysUserData((prevData) => ({
       ...prevData,
       searchObject: {
         ...prevData.searchObject,
-        roleName: e.target.value,
+        username: e.target.value,
       },
     }));
   };
 
   const handleSearch = () => {
     // You may add more search parameters as needed
-    getSysRolePage();
+    getSysUserPage();
   };
 
   const handlePageChange = (newPage) => {
-    setSysRoleData((prevData) => ({
-      ...prevData,
-      page: newPage,
-    }));
+    if(newPage <= sysUserData.totalPage){
+      setSysUserData((prevData) => ({
+        ...prevData,
+        page: newPage,
+      }));
+    }
   };
   
   const del_function = () =>{
-    getSysRolePage();
+    getSysUserPage();
   }
 
   const handleBatchDeleteCheckbox = ()=>{
     setDeleteBatch(!deleteBatch);
     if(deleteBatch){
-      const allIds = sysRoleData.dataList.map((role) => role.id);
+      const allIds = sysUserData.dataList.map((user) => user.id);
       setSelectedRows(allIds);
     }else{
       setSelectedRows([]);
     }
   }
 
-  const handleRowSelect = (roleId) => {
+  const handleRowSelect = (userId) => {
     setSelectedRows((prevSelectedRows) => {
-      return prevSelectedRows.includes(roleId)
-        ? prevSelectedRows.filter((id) => id !== roleId)
-        : [...prevSelectedRows, roleId];
+      return prevSelectedRows.includes(userId)
+        ? prevSelectedRows.filter((id) => id !== userId)
+        : [...prevSelectedRows, userId];
     });
   };
 
@@ -209,72 +211,78 @@ const SysUser = () => {
 
 
   return (
-    <div className='SysRoleContainer'>
+    <div className='SysUserContainer'>
       
-      <h2 className='SysRoleTittle'>System Role Information</h2>
+      <h2 className='SysUserTittle'>System Role Information</h2>
 
       {/* Search Bar */}
       <div className='searchBar'>
-        <p>Role Name:</p>
+        <p>User Name:</p>
         <input
           type="text"
-          value={sysRoleData.searchObject.roleName}
+          value={sysUserData.searchObject.username}
           onChange={handleSearchChange}
-          placeholder="Search by Role Name"
+          placeholder="Search by User Name"
         />
         <button onClick={handleSearch}>Search</button>
       </div>
 
       <button 
-        className='batchDeleteRoleBtn'
+        className='batchDeleteUserBtn'
         onClick={handleOpenBatchDeleteModal}
         >
           Batch Delete
       </button>
 
       <button 
-        className='addRoleBtn'
-        onClick={handleOpenAddRoleModal}
+        className='addUserBtn'
+        onClick={handleOpenAddUserModal}
         >
           Add
       </button>
 
-      <table className='SysRoleTable'>
+      <table className='SysUserTable'>
         <thead>
           <tr>
             <th>
               <input
                 type="checkbox"
                 onChange={()=> handleBatchDeleteCheckbox()}
-                checked={selectedRows.length === sysRoleData.dataList.length}
+                checked={selectedRows.length === sysUserData.dataList.length && sysUserData.dataList.length != 0}
               />
             </th>
             <th>ID</th>
-            <th>Role Name</th>
-            <th>Role Code</th>
-            <th>Description</th>
+            <th>User Name</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Position</th>
+            <th>Department</th>
+            <th>Character</th>
+            <th>Status</th>
             <th>Create Time</th>
-            <th>Update Time</th>
             <th>Operations</th>
           </tr>
         </thead>
         <tbody>
-          {sysRoleData.dataList.map((role) => (
-            <tr key={role.id}>
+          {sysUserData.dataList.map((user) => (
+            <tr key={user.id}>
               <td>
                 <input
                   type="checkbox"
-                  onChange={(event) => handleRowSelect(role.id)}
-                  checked={selectedRows.includes(role.id)}
+                  onChange={(event) => handleRowSelect(user.id)}
+                  checked={selectedRows.includes(user.id)}
                 />
               </td>
-              <td>{role.id}</td>
-              <td>{role.roleName}</td>
-              <td>{role.roleCode}</td>
-              <td>{role.description}</td>
-              <td>{role.createTime}</td>
-              <td>{role.updateTime}</td>
-              <td><UserOperations roleObject={role} onUpdateInfo={() => del_function()}/></td>
+              <td>{user.id}</td>
+              <td>{user.username}</td>
+              <td>{user.name}</td>
+              <td>{user.phone}</td>
+              <td>{user.postId}</td>
+              <td>{user.deptId}</td>
+              <td>-</td>
+              <th>-</th>
+              <th>{user.createTime}</th>
+              <td><UserOperations userObject={user} onUpdateInfo={() => del_function()}/></td>
             </tr>
           ))}
         </tbody>
@@ -282,19 +290,19 @@ const SysUser = () => {
 
       {/* Pagination */}
       <div className='Pagination'>
-        <p className='totalPage'>Total Pages: {sysRoleData.totalPage}</p>
+        <p className='totalPage'>Total Pages: {sysUserData.totalPage}</p>
         <div className='core'>
           <button
-            disabled={sysRoleData.page === 1}
-            onClick={() => handlePageChange(sysRoleData.page - 1)}
+            disabled={sysUserData.page === 1}
+            onClick={() => handlePageChange(sysUserData.page - 1)}
             className="arrowButton"
           >
             &lt; {/* 左箭头 */}
           </button>
-          <span>{sysRoleData.page}</span>
+          <span>{sysUserData.page}</span>
           <button
-            disabled={sysRoleData.page === sysRoleData.totalPage}
-            onClick={() => handlePageChange(sysRoleData.page + 1)}
+            disabled={sysUserData.page === sysUserData.totalPage}
+            onClick={() => handlePageChange(sysUserData.page + 1)}
             className="arrowButton"
           >
             &gt; {/* 右箭头 */}
@@ -303,44 +311,52 @@ const SysUser = () => {
         <p>Go to page: </p>
         <input
           type="number"
-          value={sysRoleData.page}
+          value={sysUserData.page}
           onChange={(e) => handlePageChange(Number(e.target.value))}
           min={1}
-          max={sysRoleData.totalPage}
+          max={sysUserData.totalPage}
         />
-        <button onClick={getSysRolePage}>Go</button>
+        <button onClick={getSysUserPage} disabled={sysUserData.page > sysUserData.totalPage}>Go</button>
       </div>
       <CustomModal
-        isOpen={addRoleForm}
-        onRequestClose={handleCancleAddRoleModal}
+        isOpen={addUserForm}
+        onRequestClose={handleCancleAddUserModal}
         contentLabel="Custom Modal"
       >
-        <h2>Create Role</h2>
-        <form onSubmit={handleAddRoleSubmit}>
-          <div className='addRoleFormConatainer'>  
+        <h2>Create User</h2>
+        <form onSubmit={handleAddUserSubmit}>
+          <div className='addUserFormConatainer'>  
             <label>
-              Role Name:
+              User Name:
               <input
                 type="text"
-                name="roleName"
-                value={formData.roleName}
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
               />
             </label>
             <label>
-              Role Code:
+              Password:
               <input
                 type="text"
-                name="roleCode"
-                value={formData.roleCode}
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
               />
             </label>
             <label>
-              Description:
+              Name:
               <input
-                name="description"
-                value={formData.description}
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Phone:
+              <input
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
               />
             </label>
@@ -352,7 +368,7 @@ const SysUser = () => {
         isOpen={isBatchDeleteModalOpen}
         onRequestClose={handleCancelBatchDeleteModal}
     >
-        <p>Are you sure you want to delete {selectedRows.length} roles?</p>
+        <p>Are you sure you want to delete {selectedRows.length} users?</p>
         <button className='deleteBtn' onClick={handleBatchDelete}>Yes</button>
         <button className='cancelDeleteBtn' onClick={handleCancelBatchDeleteModal}>No</button>
     </CustomModal>

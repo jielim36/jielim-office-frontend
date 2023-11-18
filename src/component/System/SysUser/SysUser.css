@@ -1,12 +1,10 @@
-/* SysRole.css */
-
-.SysRoleContainer {
+.SysUserContainer {
     position: absolute;
     width: 100%;
     padding: 10px 40px;
 }
 
-.SysRoleTittle{
+.SysUserTittle{
     margin-bottom: 30px;
     margin-top: 10px;
 }
@@ -27,31 +25,31 @@
     border-radius: 4px; /* Add border-radius for rounded corners */
 }
 
-.addRoleBtn {
+.addUserBtn {
     margin-top: 10px;
 }
   
-.SysRoleTable {
+.SysUserTable {
 width: 100%;
 border-collapse: collapse;
 margin-top: 20px;
 }
 
-.SysRoleTable th, .SysRoleTable td {
+.SysUserTable th, .SysUserTable td {
 border: 1px solid #ddd;
 padding: 8px;
 text-align: left;
 }
 
-.SysRoleTable th {
+.SysUserTable th {
 background-color: #f2f2f2;
 }
 
-.SysRoleTable tbody tr:nth-child(even) {
+.SysUserTable tbody tr:nth-child(even) {
 background-color: #f9f9f9;
 }
 
-.SysRoleTable tbody tr:hover {
+.SysUserTable tbody tr:hover {
 background-color: #e0e0e0;
 }
 
@@ -111,21 +109,21 @@ background-color: #e0e0e0;
     color: var(--button-hover-color); /* 鼠标悬停时的背景颜色 */
 }
 
-/* add role form */
-.addRoleFormConatainer {
+/* add user form */
+.addUserFormConatainer {
     display: flex;
     flex-direction: column;
     max-width: 300px; /* 调整需要的最大宽度 */
     margin: 0 auto; /* 居中显示，可以根据需要调整 */
 }
 
-.addRoleFormConatainer label {
+.addUserFormConatainer label {
     margin-bottom: 8px; /* 调整 label 之间的垂直间距 */
     flex: 1; /* 让每个 label 的宽度相等 */
     margin-bottom: 8px; /* 调整 label 之间的垂直间距 */
 }
   
-.addRoleFormConatainer input {
+.addUserFormConatainer input {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -133,10 +131,10 @@ background-color: #e0e0e0;
     margin-left: 7px;
 }
 
-.SysRoleContainer .batchDeleteRoleBtn{
+.SysUserContainer .batchDeleteUserBtn{
     background-color: var(--button-red-color);
 }
 
-.SysRoleContainer .batchDeleteRoleBtn:hover{
+.SysUserContainer .batchDeleteUserBtn:hover{
     background-color: var(--button-red-hover-color);
 }

@@ -5,22 +5,22 @@ import CustomModal from '../../Tools/Modal/CustomModal';
 import './UserOperations.css';
 import AxiosUtil from '../../../Axios/AxiosUtil';
 
-const UserOperations = ({roleObject, onUpdateInfo}) => {
+const UserOperations = ({userObject, onUpdateInfo}) => {
 
-    const baseAPI = `/admin/system/sysRole`;
+    const baseAPI = `/admin/system/sysUser`;
     const [showAlert, setShowAlert] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alertContent , setAlertContent] = useState('default content');
-    const [editRoleForm , setEditRoleForm] = useState(false);
+    const [editUserForm , setEditUserForm] = useState(false);
 
-    const [formData, setFormData] = useState(roleObject);
+    const [formData, setFormData] = useState(userObject);
   
-    const handleOpenEditRoleModal = () =>{
-      setEditRoleForm(true);
+    const handleOpenEditUserModal = () =>{
+      setEditUserForm(true);
     }
   
-    const handleCancleEditRoleModal = () =>{
-      setEditRoleForm(false);
+    const handleCancleEditUserModal = () =>{
+      setEditUserForm(false);
     }
   
     const handleChange = (e) => {
@@ -31,10 +31,10 @@ const UserOperations = ({roleObject, onUpdateInfo}) => {
       }));
     };
   
-    const handleAddRoleSubmit = (e) => {
+    const handleAddUserSubmit = (e) => {
       e.preventDefault();
-      editSysRoleRequest();
-      handleCancleEditRoleModal();
+      editSysUserRequest();
+      handleCancleEditUserModal();
     };
 
     const handleDelete = () => {
@@ -44,10 +44,10 @@ const UserOperations = ({roleObject, onUpdateInfo}) => {
       const handleConfirmDelete = () => {
         // 在这里执行删除逻辑
         setIsModalOpen(false);
-        AxiosUtil('delete', `${baseAPI}/${roleObject.id}` ).then(
+        AxiosUtil('delete', `${baseAPI}/${userObject.id}` ).then(
             (res) => {
               if (res.message === 'Success') {
-                setAlertContent(`${roleObject.roleName} Role is Deleted!`)
+                setAlertContent(`User: ${userObject.username} is Deleted!`)
               } else {
                 setAlertContent(`Invalid delete operation...`)
               }
@@ -60,7 +60,7 @@ const UserOperations = ({roleObject, onUpdateInfo}) => {
       };
 
       
-      const editSysRoleRequest = ()=>{
+      const editSysUserRequest = ()=>{
         AxiosUtil('put',`${baseAPI}`,formData).then(
           (res) => {
             if (res.message === 'Success') {
@@ -115,48 +115,56 @@ const UserOperations = ({roleObject, onUpdateInfo}) => {
     return (
         <>
             <div>
-                <button className='operationBtn' onClick={handleOpenEditRoleModal}>Edit</button>
+                <button className='operationBtn' onClick={handleOpenEditUserModal}>Edit</button>
                 <button className='operationBtn .deleteBtn' onClick={handleDelete}>Delete</button>
             </div>
             <CustomModal
                 isOpen={isModalOpen}
                 onRequestClose={handleCancelDelete}
             >
-                <p>Are you sure you want to delete this role?</p>
+                <p>Are you sure you want to delete this user?</p>
                 <button className='deleteBtn' onClick={handleConfirmDelete}>Yes</button>
                 <button className='cancelDeleteBtn' onClick={handleCancelDelete}>No</button>
             </CustomModal>
             <CustomModal
-              isOpen={editRoleForm}
-              onRequestClose={handleCancleEditRoleModal}
+              isOpen={editUserForm}
+              onRequestClose={handleCancleEditUserModal}
               contentLabel="Custom Modal"
             >
-              <h2>Create Role</h2>
-              <form onSubmit={handleAddRoleSubmit}>
-                <div className='addRoleFormConatainer'>  
+              <h2>Create User</h2>
+              <form onSubmit={handleAddUserSubmit}>
+                <div className='addUserFormConatainer'>  
                   <label>
-                    Role Name:
+                    User Name:
                     <input
                       type="text"
-                      name="roleName"
-                      value={formData.roleName}
+                      name="username"
+                      value={formData.username}
                       onChange={handleChange}
                     />
                   </label>
                   <label>
-                    Role Code:
+                    Password:
                     <input
                       type="text"
-                      name="roleCode"
-                      value={formData.roleCode}
+                      name="password"
+                      value={formData.password}
                       onChange={handleChange}
                     />
                   </label>
                   <label>
-                    Description:
+                    Name:
                     <input
-                      name="description"
-                      value={formData.description}
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
+                  </label>
+                  <label>
+                    Phone:
+                    <input
+                      name="phone"
+                      value={formData.phone}
                       onChange={handleChange}
                     />
                   </label>
