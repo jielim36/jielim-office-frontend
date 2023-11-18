@@ -248,7 +248,7 @@ const SysRole = () => {
               <input
                 type="checkbox"
                 onChange={()=> handleBatchDeleteCheckbox()}
-                checked={selectedRows.length === sysRoleData.dataList.length && sysRoleData.dataList.length != 0}
+                checked={selectedRows.length === sysRoleData.dataList.length && sysRoleData.dataList.length !== 0}
               />
             </th>
             <th>ID</th>

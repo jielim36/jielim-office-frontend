@@ -1,21 +1,28 @@
 .alertContainer {
+  display: flex;
+  align-items: center; /* 垂直居中 */
   position: fixed;
   bottom: 0;
   max-width: 500px;
   right: 0;
   transform: translateX(-50px) translateY(100%); /* 初始位置在底部之外 */
-  z-index: 1000;
+  z-index: 10;
   transition: transform 0.5s ease-in-out; /* 过渡动画效果，0.5秒 */
+  background-color: white;
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+  padding: 16px;
 }
 
 .alertContainer.show {
-  transform: translateX(-50px) translateY(0); /* 显示时移动到底部 */
+  transform: translateX(-50px) translateY(-15px); /* 显示时移动到底部 */
 }
 
 .alert {
-  background-color: white;
-  box-shadow: var(--shadow);
-  padding: 16px;
-  border-radius: 8px;
-  margin: 10px;
+}
+
+.icon {
+  width: 24px; /* 适当调整图标的宽度 */
+  height: auto; /* 保持图标的纵横比 */
+  margin-right: 8px; /* 适当的右边距 */
 }

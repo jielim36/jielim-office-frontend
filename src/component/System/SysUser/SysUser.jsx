@@ -1,9 +1,11 @@
 import './SysUser.css';
 import React, { useEffect, useState,useCallback } from 'react'
+import {Switch} from 'antd';
 import AxiosUtil from '../../../Axios/AxiosUtil';
 import UserOperations from './UserOperations';
 import CustomModal from '../../Tools/Modal/CustomModal';
 import Alert from '../../Tools/Alert/Alert';
+
 
 const SysUser = () => {
 
@@ -209,6 +211,29 @@ const SysUser = () => {
     setIsBatchDeleteModalOpen(true);
   };
 
+  const statusOnChange = (user) => (checked) => {
+    console.log(`User ID: ${user.id}, Status: ${checked}`);
+    user.status = checked ? 1:0;
+    console.log(user.status);
+    editSysUserRequest(user);
+  };
+
+  const editSysUserRequest = (userObejct)=>{
+    AxiosUtil('put',`${baseAPI}`,userObejct).then(
+      (res) => {
+        if (res.message === 'Success') {
+          setAlertContent(`${userObejct.status === 1 ? "Enabeld" : "Disabled"} user: ${userObejct.username}(${userObejct.id})`);
+          updateInformation();
+          popupAlert();
+        } else {
+          console.error('Invalid response format:', res);
+        }
+      },
+      (error) => {
+        console.log('Error:', error);
+      }
+    );
+  }
 
   return (
     <div className='SysUserContainer'>
@@ -248,7 +273,7 @@ const SysUser = () => {
               <input
                 type="checkbox"
                 onChange={()=> handleBatchDeleteCheckbox()}
-                checked={selectedRows.length === sysUserData.dataList.length && sysUserData.dataList.length != 0}
+                checked={selectedRows.length === sysUserData.dataList.length && sysUserData.dataList.length !== 0}
               />
             </th>
             <th>ID</th>
@@ -279,8 +304,10 @@ const SysUser = () => {
               <td>{user.phone}</td>
               <td>{user.postId}</td>
               <td>{user.deptId}</td>
-              <td>-</td>
-              <th>-</th>
+              <td>character</td>
+              <th>
+                <Switch defaultChecked onChange={statusOnChange(user)} checked={user.status}/>
+              </th>
               <th>{user.createTime}</th>
               <td><UserOperations userObject={user} onUpdateInfo={() => del_function()}/></td>
             </tr>
