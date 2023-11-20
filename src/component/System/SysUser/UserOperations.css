@@ -9,3 +9,8 @@
 .deleteBtn:hover{
     background-color: #ff4d4f;
 }
+
+.userRoleCheckBox {
+    display: flex;
+    margin-bottom: 5px;
+}

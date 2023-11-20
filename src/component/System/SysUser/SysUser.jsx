@@ -309,7 +309,9 @@ const SysUser = () => {
                 <Switch defaultChecked onChange={statusOnChange(user)} checked={user.status}/>
               </th>
               <th>{user.createTime}</th>
-              <td><UserOperations userObject={user} onUpdateInfo={() => del_function()}/></td>
+              <td>
+                <UserOperations userObject={user} onUpdateInfo={() => del_function()}/>
+              </td>
             </tr>
           ))}
         </tbody>
