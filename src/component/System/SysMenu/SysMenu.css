@@ -1,0 +1,58 @@
+.SysMenuContainer {
+    position: absolute;
+    width: 100%;
+    padding: 10px 40px;
+}
+
+.SysMenuTittle{
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.SysMenuTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.SysMenuTable th, .SysMenuTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.SysMenuTable th {
+    background-color: #f2f2f2;
+}
+
+.SysMenuTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.SysMenuTable tbody tr:hover {
+    background-color: #e0e0e0;
+}
+
+.SysMenuTable td {
+    max-width: 200px; /* 设置最大宽度 */
+    overflow: auto;
+    white-space: nowrap; /* 防止换行 */
+}
+
+.SysMenuTable td::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+.SysMenuTable td::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* 设置滚动条轨道背景色 */
+}
+
+.SysMenuTable td::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* 设置滚动条滑块颜色 */
+    border-radius: 6px; /* 设置滑块的圆角 */
+}
+
+.SysMenuTable td::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* 设置滚动条滑块悬停时的颜色 */
+}
+    

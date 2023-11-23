@@ -26,6 +26,9 @@ const NavSideBar = () => {
             <li>
               <Link to="/System/SysUser">System User</Link>
             </li>
+            <li>
+              <Link to="/System/SysMenu">System Menu</Link>
+            </li>
           </ul>
         </li>
       </ul>
