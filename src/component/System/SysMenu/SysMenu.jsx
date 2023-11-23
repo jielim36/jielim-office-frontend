@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import './SysMenu.css';
 import AxiosUtil from '../../../Axios/AxiosUtil';
+import arrowRight_img from '../../../assets/arrow-right.png';
+import arrowDown_img from '../../../assets/arrow-down.png';
+import point_img from '../../../assets/point.png';
+
 
 const SysMenu = () => {
 
@@ -51,49 +55,60 @@ const SysMenu = () => {
 
 const MenuTable = ({ menuData , level }) => {
 
-    const [isExpanded, setIsExpanded] = useState(false);
-
-
-    const handleMenuClick = () => {
-        setIsExpanded(!isExpanded);
-    };
-
     if (menuData && menuData.length > 0) {
       return (
         <>
           {menuData.map((menu) => (
             <React.Fragment key={menu.id}>
-              <tr onClick={handleMenuClick}>
                 <MenuItem menu={menu} level={level}/>
-              </tr>
-              {menu.children && menu.children.length > 0 && isExpanded? (
-                <MenuTable menuData={menu.children} level={level+1.5}/>
-              ) : null}
             </React.Fragment>
           ))}
         </>
       );
     }
   
-    return null; // Add this line to handle the case when menuData is undefined or an empty array
+    return null;
   };
   
 
 const MenuItem = ({ menu , level}) => {
 
     const paddingLevel = `${level*10}px`;
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [animation, setAnimation] = useState(false);
+
+    useEffect(() => {
+      setAnimation(true);
+    }, []); 
+
+
+    const handleMenuClick = () => {
+        setIsExpanded(!isExpanded);
+    };
 
     return (
         <>
-            <td className='menuName' style={{paddingLeft: paddingLevel}}>{menu.name}</td>
+          <tr onClick={handleMenuClick} className={animation ? 'slideAnimation' : ''}>
+            <td className='menuName' style={{ paddingLeft: paddingLevel }}>
+              {menu.children && menu.children.length > 0 ? 
+                <img src={arrowRight_img} alt='' className={isExpanded ? 'expanded' : ''}/>
+                :
+                <img src={point_img} style={{boxSizing:'border-box',padding:'3px'}} alt=''/>
+              }
+              {menu.name}
+            </td>
             <td>{menu.perms}</td>
             <td>{menu.path}</td>
             <td>{menu.component}</td>
             <td>{menu.sortValue}</td>
             <td>{menu.status}</td>
             <td></td>
+          </tr>
+          {isExpanded && menu.children && menu.children.length > 0 ? (
+            <MenuTable menuData={menu.children} level={level + 1.5}/>
+          ) : null}
         </>
-    );
+      );
   };
 
 export default SysMenu

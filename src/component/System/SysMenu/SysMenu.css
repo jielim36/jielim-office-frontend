@@ -55,4 +55,28 @@
 .SysMenuTable td::-webkit-scrollbar-thumb:hover {
     background-color: #555; /* 设置滚动条滑块悬停时的颜色 */
 }
-    
+
+.menuName {
+    position: relative;
+}
+
+.menuName img {
+    width: 13px;
+    margin: 0 3px;
+    transition: transform 0.4s ease-in-out; /* 添加过渡效果，使 transform 变化具有平滑过渡 */
+}
+
+.menuName img.expanded {
+    transform: rotate(90deg); /* 展开时旋转图标 */
+}
+
+.SysMenuTable tbody tr{
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.SysMenuContainer .SysMenuTable tr.slideAnimation {
+    opacity: 1;
+    transform: translateY(0px);
+    transition: opacity 0.5s, transform 0.1s ease-in-out;
+}
