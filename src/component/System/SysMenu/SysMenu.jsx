@@ -40,6 +40,30 @@ const SysMenu = () => {
         );
     },[])
 
+    const getMenuData = ()=>{
+        AxiosUtil('get',`${baseAPI}`).then(
+            (res) => {
+                if (res.message === 'Success') {
+                setMenuData(res.data);
+                } else {
+                console.error('Invalid response format:', res);
+                }
+            },
+            (error) => {
+                console.log('Error:', error);
+            }
+        );
+    }
+
+    const updateInformation = ()=>{
+        const timeout = setTimeout(() => {
+            getMenuData();
+        }, 100);
+    
+        // 清理定时器以防止内存泄漏
+        return () => clearTimeout(timeout);
+      }
+
     const handleCancleAddMenuModal = ()=>{
         setIsOpenMenuForm(false);
     }
@@ -172,7 +196,7 @@ const SysMenu = () => {
                     </tr>
                     </thead>
                     <tbody>
-                        {menuData.length > 0 ? <MenuTable menuData={menuData} level={1}/> : ''}
+                        {menuData.length > 0 ? <MenuTable menuData={menuData} level={1} onUpdateInfo={updateInformation} /> : ''}
                     </tbody>
                 </table>
             </div>
@@ -185,14 +209,14 @@ const SysMenu = () => {
     
 }
 
-const MenuTable = ({ menuData , level }) => {
+const MenuTable = ({ menuData , level , onUpdateInfo}) => {
     
     if (menuData && menuData.length > 0) {
         return (
             <>
           {menuData.map((menu) => (
             <React.Fragment key={menu.id}>
-                <MenuItem menu={menu} level={level}/>
+                <MenuItem menu={menu} level={level} onUpdateInfo={onUpdateInfo}/>
             </React.Fragment>
           ))}
         </>
@@ -203,15 +227,20 @@ const MenuTable = ({ menuData , level }) => {
   };
   
 
-const MenuItem = ({ menu , level}) => {
+const MenuItem = ({ menu , level , onUpdateInfo}) => {
 
     const paddingLevel = `${level*10}px`;
     const [isExpanded, setIsExpanded] = useState(false);
     const [animation, setAnimation] = useState(false);
+    const [menuObject , setMenuObject] = useState(menu);
 
     useEffect(() => {
       setAnimation(true);
     }, []); 
+
+    useEffect(()=>{
+        setMenuObject(menu);
+    },[menu])
 
     const handleMenuClick = () => {
         setIsExpanded(!isExpanded);
@@ -223,7 +252,7 @@ const MenuItem = ({ menu , level}) => {
         AxiosUtil('put',`/admin/system/sysMenu`,menu).then(
             (res) => {
                 if (res.message === 'Success') {
-                    //...
+                    onUpdateInfo();
                 } else {
                 console.error('Invalid response format:', res);
                 }
@@ -243,13 +272,13 @@ const MenuItem = ({ menu , level}) => {
                 :
                 <img src={point_img} style={{boxSizing:'border-box',padding:'3px'}} alt=''/>
               }
-              {menu.name}
+              {menuObject.name}
             </td>
-            <td>{menu.perms}</td>
-            <td>{menu.path}</td>
-            <td>{menu.component}</td>
-            <td>{menu.sortValue}</td>
-            <td><Switch checked={menu.status} onChange={handleChangeStatus} /></td>
+            <td>{menuObject.perms}</td>
+            <td>{menuObject.path}</td>
+            <td>{menuObject.component}</td>
+            <td>{menuObject.sortValue}</td>
+            <td><Switch checked={menuObject.status} onChange={handleChangeStatus} /></td>
             <td>
                 <OperationsSysMenu menu={menu}/>
             </td>
