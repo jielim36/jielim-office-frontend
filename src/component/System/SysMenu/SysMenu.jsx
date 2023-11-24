@@ -6,6 +6,7 @@ import point_img from '../../../assets/point.png';
 import CustomModal from '../../Tools/Modal/CustomModal';
 import { Radio,Switch } from 'antd';
 import Alert from '../../Tools/Alert/Alert';
+import OperationsSysMenu from './OperationsSysMenu';
 
 
 const SysMenu = () => {
@@ -86,7 +87,7 @@ const SysMenu = () => {
     
         // 清理定时器以防止内存泄漏
         return () => clearTimeout(timeout);
-      }
+    }
 
     return (
         <>
@@ -176,7 +177,7 @@ const SysMenu = () => {
                 </table>
             </div>
         </div>
-
+        
         <Alert content={alertContent} show={showAlert}/>
         </>
     )
@@ -235,8 +236,8 @@ const MenuItem = ({ menu , level}) => {
 
     return (
         <>
-          <tr onClick={handleMenuClick} className={animation ? 'slideAnimation' : ''}>
-            <td className='menuName' style={{ paddingLeft: paddingLevel }}>
+          <tr className={animation ? 'slideAnimation' : ''}>
+            <td className='menuName' style={{ paddingLeft: paddingLevel , cursor: menu.children && menu.children.length > 0 ? 'pointer' : ''}} onClick={handleMenuClick}>
               {menu.children && menu.children.length > 0 ? 
                 <img src={arrowRight_img} alt='' className={isExpanded ? 'expanded' : ''}/>
                 :
@@ -249,7 +250,9 @@ const MenuItem = ({ menu , level}) => {
             <td>{menu.component}</td>
             <td>{menu.sortValue}</td>
             <td><Switch checked={menu.status} onChange={handleChangeStatus} /></td>
-            <td></td>
+            <td>
+                <OperationsSysMenu menu={menu}/>
+            </td>
           </tr>
           {isExpanded && menu.children && menu.children.length > 0 ? (
             <MenuTable menuData={menu.children} level={level + 1.5}/>
