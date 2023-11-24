@@ -86,4 +86,14 @@ button:hover{
   background-color: var(--button-hover-color);
 }
 
+.disabledBtn{
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.disabledBtn:hover{
+  background-color: #ccc;
+}
+
+
 

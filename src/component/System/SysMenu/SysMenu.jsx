@@ -280,11 +280,11 @@ const MenuItem = ({ menu , level , onUpdateInfo}) => {
             <td>{menuObject.sortValue}</td>
             <td><Switch checked={menuObject.status} onChange={handleChangeStatus} /></td>
             <td>
-                <OperationsSysMenu menu={menu}/>
+                <OperationsSysMenu menu={menu} level={level} onUpdateInfo={onUpdateInfo} />
             </td>
           </tr>
           {isExpanded && menu.children && menu.children.length > 0 ? (
-            <MenuTable menuData={menu.children} level={level + 1.5}/>
+            <MenuTable menuData={menu.children} level={level + 1.5} onUpdateInfo={onUpdateInfo}/>
           ) : null}
         </>
       );
