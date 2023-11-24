@@ -4,7 +4,7 @@ import AxiosUtil from '../../../Axios/AxiosUtil';
 import arrowRight_img from '../../../assets/arrow-right.png';
 import point_img from '../../../assets/point.png';
 import CustomModal from '../../Tools/Modal/CustomModal';
-import { Radio } from 'antd';
+import { Radio,Switch } from 'antd';
 import Alert from '../../Tools/Alert/Alert';
 
 
@@ -211,11 +211,27 @@ const MenuItem = ({ menu , level}) => {
     useEffect(() => {
       setAnimation(true);
     }, []); 
- 
 
     const handleMenuClick = () => {
         setIsExpanded(!isExpanded);
     };
+
+    //edit status of the menu
+    const handleChangeStatus = (checked) =>{
+        menu.status = checked ? 1 : 0;
+        AxiosUtil('put',`/admin/system/sysMenu`,menu).then(
+            (res) => {
+                if (res.message === 'Success') {
+                    //...
+                } else {
+                console.error('Invalid response format:', res);
+                }
+            },
+            (error) => {
+                console.log('Error:', error);
+            }
+        );
+    }
 
     return (
         <>
@@ -232,7 +248,7 @@ const MenuItem = ({ menu , level}) => {
             <td>{menu.path}</td>
             <td>{menu.component}</td>
             <td>{menu.sortValue}</td>
-            <td>{menu.status}</td>
+            <td><Switch checked={menu.status} onChange={handleChangeStatus} /></td>
             <td></td>
           </tr>
           {isExpanded && menu.children && menu.children.length > 0 ? (
